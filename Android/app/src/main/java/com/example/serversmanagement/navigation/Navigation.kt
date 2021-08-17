@@ -7,16 +7,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.example.serversmanagement.serverlist.ServerListScreen
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "instances_list_screen")
+        startDestination = "server_list_screen")
     {
-        composable("instances_list_screen") {
-
+        composable("server_list_screen") {
+            ServerListScreen(navController = navController)
         }
         composable("instance_details_screen/{name}/{ipaddress}/{status}/{memory}/{type}",
             arguments = listOf(
