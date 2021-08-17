@@ -45,7 +45,7 @@ const deleteInstance = async(req, res) => {
         const id = req.params.id
         const result = await client.execute(`DELETE FROM servers.instances WHERE id=${id};`)
         console.log(result.info)
-        res.status(204).json({})
+        res.status(204).send()
     } catch(e) {
         res.status(500).json({'error': 'An error occurred.'})
         console.log(e)
