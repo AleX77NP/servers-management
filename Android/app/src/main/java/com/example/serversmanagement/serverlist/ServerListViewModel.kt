@@ -25,7 +25,7 @@ class ServerListViewModel @Inject constructor(
         loadInstances()
     }
 
-    private fun loadInstances() {
+    fun loadInstances() {
         viewModelScope.launch {
             isLoading.value = true
             when(val result = repository.getMyInstances("milanovicaleX77@gmail.com")) {
@@ -36,6 +36,7 @@ class ServerListViewModel @Inject constructor(
                     }
                     serversList.value += listEntries
                     isLoading.value = false
+                    loadError.value = ""
                 }
                 is Resource.Error -> {
                     loadError.value = result.message.toString()
