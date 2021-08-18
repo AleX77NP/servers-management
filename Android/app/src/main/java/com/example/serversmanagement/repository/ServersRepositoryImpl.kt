@@ -18,7 +18,7 @@ class ServersRepositoryImpl @Inject constructor(
         val response = try {
             api.getMyInstances(user)
         } catch (e: Exception) {
-            return Resource.Error("Couldn't get user's instances")
+            return Resource.Error(e.toString())
         }
         return Resource.Success(response)
     }
@@ -27,7 +27,7 @@ class ServersRepositoryImpl @Inject constructor(
         val response = try {
             api.createServerInstance(instance)
         } catch (e: Exception) {
-            return Resource.Error("Couldn't create new instance.")
+            return Resource.Error(e.toString())
         }
         return Resource.Success(response)
     }
@@ -36,7 +36,7 @@ class ServersRepositoryImpl @Inject constructor(
         val response = try {
             api.updateInstanceStatus(id)
         } catch (e: Exception) {
-            return Resource.Error("Couldn't update status of this instance.")
+            return Resource.Error(e.toString())
         }
         return Resource.Success(response)
     }
@@ -45,7 +45,7 @@ class ServersRepositoryImpl @Inject constructor(
         val response = try {
             api.deleteInstance(id)
         } catch (e: Exception) {
-            return Resource.Error("Couldn't delete instance.")
+            return Resource.Error(e.toString())
         }
         return Resource.Success(Unit)
     }

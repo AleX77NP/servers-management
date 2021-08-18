@@ -15,16 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.serversmanagement.R
+import com.example.serversmanagement.util.customFontFamily
 
 @Composable
 fun Title(text: String) {
-    val fontFamily = FontFamily(
-        Font(R.font.teko_light, FontWeight.Light),
-        Font(R.font.teko_medium, FontWeight.Medium),
-        Font(R.font.teko_regular, FontWeight.Normal),
-        Font(R.font.teko_semibold, FontWeight.SemiBold),
-        Font(R.font.teko_bold, FontWeight.Bold)
-    )
 
     Box(modifier = Modifier.fillMaxWidth(),
     contentAlignment = Alignment.Center) {
@@ -32,9 +26,9 @@ fun Title(text: String) {
             text = text,
             color = Color.Black,
             fontSize = 32.sp,
-            fontFamily =  fontFamily,
+            fontFamily =  customFontFamily,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(top = 14.dp)
         )
     }
 }

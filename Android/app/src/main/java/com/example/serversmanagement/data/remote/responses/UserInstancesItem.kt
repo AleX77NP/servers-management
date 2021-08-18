@@ -1,7 +1,9 @@
 package com.example.serversmanagement.data.remote.responses
 
+import java.util.*
+
 data class UserInstancesItem(
-    val id: String,
+    val id: UUID,
     val ipaddress: String,
     val memory: Int,
     val name: String,
