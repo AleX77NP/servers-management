@@ -41,7 +41,7 @@ class ServersRepositoryImpl @Inject constructor(
         return Resource.Success(response)
     }
 
-    suspend fun deleteInstanceStatus(id: UUID): Resource<Unit> {
+    suspend fun deleteInstance(id: UUID): Resource<Unit> {
         val response = try {
             api.deleteInstance(id)
         } catch (e: Exception) {

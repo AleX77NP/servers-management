@@ -1,12 +1,13 @@
 package com.example.serversmanagement.serverlist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -27,8 +28,9 @@ fun InstanceItem(
     modifier: Modifier = Modifier,
     viewModel: ServerListViewModel = hiltViewModel()
 ) {
-    var serverType by remember {
-        mutableStateOf(viewModel.serverTypeImage(entry.type))
+    val serverType = viewModel.serverTypeImage(entry.type)
+    var showDialog by remember {
+        mutableStateOf(false)
     }
 
     Box(
@@ -36,6 +38,20 @@ fun InstanceItem(
             .padding(bottom = 14.dp),
         contentAlignment = Center
     ) {
+        if(showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text(text = "Delete instance")},
+                text = { Text(text = "Are You sure You want do delete this instance?") },
+                confirmButton = { Text(text = "Yes", modifier = Modifier.clickable {
+                    viewModel.deleteInstance(entry.id)
+                    showDialog = false
+                }) },
+                dismissButton = { Text(text = "Cancel", Modifier.clickable {
+                    showDialog = false
+                })}
+            )
+        }
         Card(
             modifier = modifier
                 .clickable {
@@ -55,13 +71,20 @@ fun InstanceItem(
                         .align(CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = entry.name,
-                    fontFamily = customFontFamily,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = entry.name,
+                        fontFamily = customFontFamily,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                    Button(onClick = { showDialog = true }, colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.LightGray
+                    )) {
+                        Text(text = "Delete", color = Color.Red)
+                    }
+                }
             }
         }
     }

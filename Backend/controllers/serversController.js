@@ -7,12 +7,16 @@ const { v4: uuidv4 } = require('uuid');
 const createServerInstance = async(req, res) => {
     try {
         const id = uuidv4()
+        let st = false
         const { user, ipaddress, memory, name, status, type } = req.body
-        if (!user || !ipaddress || !memory || !name || !status || !type) {
+        if(status !== undefined) {
+            st = status
+        }
+        if (!user || !ipaddress || !memory || !name || !type) {
             return res.status(400).json({'error': 'Invalid info.'})
         }
         const result = await client.execute(`INSERT INTO servers.instances (id, user, ipaddress, memory, name, status, type)
-        VALUES (${id}, '${user}', '${ipaddress}', ${memory}, '${name}', ${status}, '${type}');`)
+        VALUES (${id}, '${user}', '${ipaddress}', ${memory}, '${name}', ${st}, '${type}');`)
 
         res.status(201).json({'message': 'Instance created.'})
         console.log(result.info)

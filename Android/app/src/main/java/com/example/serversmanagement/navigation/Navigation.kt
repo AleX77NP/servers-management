@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.example.serversmanagement.serverlist.ServerListScreen
+import com.example.serversmanagement.serverlist.details.DetailScreen
 
 @Composable
 fun Navigation() {
@@ -59,6 +60,11 @@ fun Navigation() {
                 type?.let { it } ?: "Web Server"
             }
 
+            DetailScreen(name = instanceName,
+                ipaddress = instanceIpAddress ,
+                status =instanceStatus ,
+                memory = instanceMemory ,
+                type = instanceType)
         }
     }
 }

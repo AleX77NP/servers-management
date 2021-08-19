@@ -3,6 +3,7 @@ package com.example.serversmanagement.data.remote
 import com.example.serversmanagement.data.dto.CreateInstanceDto
 import com.example.serversmanagement.data.remote.responses.Message
 import com.example.serversmanagement.data.remote.responses.UserInstances
+import retrofit2.Response
 import retrofit2.http.*
 import java.util.*
 
@@ -23,8 +24,8 @@ interface ServersApi {
         @Path("id") id: UUID
     ): Message
 
-    @DELETE("api/servers/instances/{id}")
+    @DELETE("api/servers/instances/remove/{id}")
     suspend fun deleteInstance(
         @Path("id") id: UUID
-    )
+    ): Response<Unit>
 }

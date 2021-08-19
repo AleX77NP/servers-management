@@ -3,13 +3,16 @@ package com.example.serversmanagement.serverlist
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.serversmanagement.R
 import com.example.serversmanagement.data.models.ServerListEntry
 import com.example.serversmanagement.repository.ServersRepositoryImpl
 import com.example.serversmanagement.util.Constants.WEB_SERVER
 import com.example.serversmanagement.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,13 +37,28 @@ class ServerListViewModel @Inject constructor(
                         ServerListEntry(userInstancesItem.id, userInstancesItem.name, userInstancesItem.ipaddress,
                         userInstancesItem.memory, userInstancesItem.status, userInstancesItem.type)
                     }
-                    serversList.value += listEntries
+                    serversList.value = listEntries
                     isLoading.value = false
                     loadError.value = ""
                 }
                 is Resource.Error -> {
                     loadError.value = result.message.toString()
                     isLoading.value = false
+                }
+            }
+        }
+    }
+
+    fun deleteInstance(id: UUID) {
+        viewModelScope.launch(Dispatchers.Default) {
+            when(val result = repository.deleteInstance(id)) {
+                is Resource.Success -> {
+                    serversList.value = serversList.value.filter { item ->
+                        item.id != id
+                    }
+                }
+                is Resource.Error -> {
+                    loadError.value = result.message.toString()
                 }
             }
         }
