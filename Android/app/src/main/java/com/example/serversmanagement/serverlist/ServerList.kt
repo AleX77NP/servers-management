@@ -23,6 +23,10 @@ fun ServerList(
     navController: NavController,
     viewModel: ServerListViewModel = hiltViewModel()
 ) {
+    SideEffect {
+        viewModel.loadInstances()
+    }
+
     val serverList by remember { viewModel.serversList }
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }

@@ -6,6 +6,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +25,28 @@ fun DetailScreen(
     status: Boolean,
     memory: Int,
     type: String,
+    id: String,
     viewModel: ServerListViewModel = hiltViewModel()
 ) {
+    var loadError by remember {
+        viewModel.loadError
+    }
+    var message by remember {
+        viewModel.message
+    }
+    var currentS by remember {
+        mutableStateOf(status)
+    }
+    LaunchedEffect(key1 = message, block = {
+        if(message == "Instance updated.") {
+            currentS = !currentS
+        }
+        if(message.isNotEmpty()) {
+            viewModel.resetMessage()
+        }
+    })
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -86,7 +107,7 @@ fun DetailScreen(
                 fontFamily = customFontFamily,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold)
-            Text(text = "${memory.toString()} GB", fontFamily = customFontFamily, fontSize = 18.sp)
+            Text(text = "$memory GB", fontFamily = customFontFamily, fontSize = 18.sp)
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -100,11 +121,36 @@ fun DetailScreen(
                 fontWeight = FontWeight.SemiBold)
             Button(onClick = { /*TODO*/ },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = if(status) Color.Green else Color.Red
+                    backgroundColor = if(currentS) Color.Green else Color.Red
                 )
             ) {
-                Text(text = if(status) "SERVER UP" else "SERVER_DOWN")
+                Text(text = if(currentS) "SERVER UP" else "SERVER_DOWN")
             }
+        }
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+            Spacer(Modifier.weight(1f))
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    viewModel.updateInstanceStatus(id)
+                }
+            ) {
+                Text(text = "Change status", fontFamily = customFontFamily, fontSize = 18.sp)
+            }
+        }
+
+        if(loadError.isNotEmpty()) {
+            Text(text = loadError,
+                color= Color.Red,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        } else if(message.isNotEmpty()) {
+            Text(text = message,
+                color= Color.Green,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
 }

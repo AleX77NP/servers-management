@@ -23,6 +23,7 @@ class ServerListViewModel @Inject constructor(
     var serversList = mutableStateOf<List<ServerListEntry>>(listOf())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
+    var message = mutableStateOf("")
 
     init {
         loadInstances()
@@ -62,6 +63,25 @@ class ServerListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun updateInstanceStatus(id: String) {
+        val uid = UUID.fromString(id)
+        viewModelScope.launch(Dispatchers.Default) {
+            when(val result = repository.updateInstanceStatus(uid)) {
+                is Resource.Success -> {
+                    message.value = "Instance updated."
+                    loadInstances()
+                }
+                is Resource.Error -> {
+                    loadError.value = result.message.toString()
+                }
+            }
+        }
+    }
+
+    fun resetMessage() {
+        message.value = ""
     }
 
     fun serverTypeImage(type: String): Int {

@@ -56,7 +56,7 @@ fun InstanceItem(
             modifier = modifier
                 .clickable {
                     navController.navigate(
-                        "instance_details_screen/${entry.name}/${entry.ipaddress}/${entry.status}/${entry.memory}/${entry.type}"
+                        "instance_details_screen/${entry.name}/${entry.ipaddress}/${entry.status}/${entry.memory}/${entry.type}/${entry.id}"
                     )
                 },
             backgroundColor = Color.Transparent,

@@ -7,6 +7,6 @@ data class ServerListEntry(
     val name: String,
     val ipaddress: String,
     val memory: Int,
-    val status: Boolean,
+    var status: Boolean,
     val type: String
 )

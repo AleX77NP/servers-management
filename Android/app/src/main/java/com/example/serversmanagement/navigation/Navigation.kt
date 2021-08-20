@@ -2,12 +2,14 @@ package com.example.serversmanagement.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.example.serversmanagement.serverlist.ServerListScreen
+import com.example.serversmanagement.serverlist.ServerListViewModel
 import com.example.serversmanagement.serverlist.details.DetailScreen
 
 @Composable
@@ -20,7 +22,7 @@ fun Navigation() {
         composable("server_list_screen") {
             ServerListScreen(navController = navController)
         }
-        composable("instance_details_screen/{name}/{ipaddress}/{status}/{memory}/{type}",
+        composable("instance_details_screen/{name}/{ipaddress}/{status}/{memory}/{type}/{id}",
             arguments = listOf(
                 navArgument("name") {
                     type = NavType.StringType
@@ -36,6 +38,9 @@ fun Navigation() {
                     type = NavType.IntType
                 },
                 navArgument("type") {
+                    type = NavType.StringType
+                },
+                navArgument("id") {
                     type = NavType.StringType
                 }
             )) {
@@ -59,12 +64,19 @@ fun Navigation() {
                 val type = it.arguments?.getString("type")
                 type?.let { it } ?: "Web Server"
             }
+            val instanceId = remember {
+                val id = it.arguments?.getString("id")
+                id?.let { it } ?: "id"
+            }
 
-            DetailScreen(name = instanceName,
+            DetailScreen(
+                name = instanceName,
                 ipaddress = instanceIpAddress ,
                 status =instanceStatus ,
                 memory = instanceMemory ,
-                type = instanceType)
+                type = instanceType,
+                id = instanceId
+            )
         }
     }
 }
