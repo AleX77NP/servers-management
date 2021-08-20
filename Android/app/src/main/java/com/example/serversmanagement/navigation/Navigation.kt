@@ -10,6 +10,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.example.serversmanagement.serverlist.ServerListScreen
 import com.example.serversmanagement.serverlist.ServerListViewModel
+import com.example.serversmanagement.serverlist.addinstance.AddInstanceScreen
 import com.example.serversmanagement.serverlist.details.DetailScreen
 
 @Composable
@@ -21,6 +22,9 @@ fun Navigation() {
     {
         composable("server_list_screen") {
             ServerListScreen(navController = navController)
+        }
+        composable("add_instance_screen") {
+            AddInstanceScreen()
         }
         composable("instance_details_screen/{name}/{ipaddress}/{status}/{memory}/{type}/{id}",
             arguments = listOf(

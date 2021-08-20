@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.serversmanagement.R
+import com.example.serversmanagement.data.dto.CreateInstanceDto
 import com.example.serversmanagement.data.models.ServerListEntry
 import com.example.serversmanagement.repository.ServersRepositoryImpl
 import com.example.serversmanagement.util.Constants.WEB_SERVER
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.abs
 
 @HiltViewModel
 class ServerListViewModel @Inject constructor(
@@ -45,6 +47,19 @@ class ServerListViewModel @Inject constructor(
                 is Resource.Error -> {
                     loadError.value = result.message.toString()
                     isLoading.value = false
+                }
+            }
+        }
+    }
+
+    fun createServerInstance(instance: CreateInstanceDto) {
+        viewModelScope.launch( Dispatchers.Default) {
+            when(val result = repository.createServerInstance(instance)) {
+                is Resource.Success -> {
+                    message.value = "Instance created."
+                }
+                is Resource.Error -> {
+                    loadError.value = result.message.toString()
                 }
             }
         }
@@ -86,6 +101,21 @@ class ServerListViewModel @Inject constructor(
 
     fun serverTypeImage(type: String): Int {
         return if (type == WEB_SERVER) R.drawable.webserver else R.drawable.dbserver
+    }
+
+    fun calculateMemory(num: Float): Int {
+        val points = listOf(2,4,8,16,32,64,128)
+        var mem = 2
+        var difference = 128
+        points.forEach{ point ->
+            run {
+                if (abs(point - num) < difference) {
+                    difference = abs(point - num).toInt()
+                    mem = point
+                }
+            }
+        }
+        return mem
     }
 
 }
