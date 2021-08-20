@@ -1,6 +1,13 @@
 package com.example.serversmanagement.serverlist
 
+import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,10 +15,14 @@ import com.example.serversmanagement.R
 import com.example.serversmanagement.data.dto.CreateInstanceDto
 import com.example.serversmanagement.data.models.ServerListEntry
 import com.example.serversmanagement.repository.ServersRepositoryImpl
+import com.example.serversmanagement.util.Constants.DATASTORE_NAME
 import com.example.serversmanagement.util.Constants.WEB_SERVER
 import com.example.serversmanagement.util.Resource
+import com.example.serversmanagement.util.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -19,22 +30,38 @@ import kotlin.math.abs
 
 @HiltViewModel
 class ServerListViewModel @Inject constructor(
-    private val repository: ServersRepositoryImpl
-): ViewModel() {
+    private val repository: ServersRepositoryImpl,
+    application: Application
+): AndroidViewModel(application) {
 
     var serversList = mutableStateOf<List<ServerListEntry>>(listOf())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
     var message = mutableStateOf("")
 
+    var loggedInUser = mutableStateOf("")
+
+    private val userInfo: UserInfo = UserInfo(application.baseContext)
+
+
     init {
-        loadInstances()
+        loadUserAndData()
+    }
+
+    private fun loadUserAndData() {
+        viewModelScope.launch {
+            val user = userInfo.getUser().collect {
+                loggedInUser.value = it
+                loadInstances()
+            }
+
+        }
     }
 
     fun loadInstances() {
         viewModelScope.launch {
             isLoading.value = true
-            when(val result = repository.getMyInstances("milanovicaleX77@gmail.com")) {
+            when(val result = repository.getMyInstances(loggedInUser.value)) {
                 is Resource.Success -> {
                     val listEntries = result.data!!.mapIndexed { _, userInstancesItem ->
                         ServerListEntry(userInstancesItem.id, userInstancesItem.name, userInstancesItem.ipaddress,

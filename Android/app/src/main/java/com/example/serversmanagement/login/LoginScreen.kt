@@ -31,18 +31,20 @@ fun LoginScreen(
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(horizontal = 50.dp,
+        modifier = Modifier.padding(50.dp,
         )
     ) {
         Image(painter = painterResource(id = R.drawable.server_logo), contentDescription = "Logo")
         Text(text = "Server management app",
         fontFamily = customFontFamily,
-        fontSize = 21.sp)
+        fontSize = 21.sp,
+            modifier = Modifier.padding(14.dp)
+        )
 
         Text(text = "Enter your email address",
             fontFamily = customFontFamily,
             fontSize = 21.sp,
-            modifier = Modifier.padding(vertical = 14.dp)
+            modifier = Modifier.padding(vertical = 20.dp)
         )
         TextField(value = email, onValueChange = {email = it})
         Button(
